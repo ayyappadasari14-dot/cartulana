@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CarTulana – Compare cars in your language</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;600;800&family=Noto+Sans+Devanagari:wght@400;600;800&family=Bricolage+Grotesque:wght@500;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f4ef;--ink:#12211b;--mut:#5b6b63;--card:#fff;--line:#d9dfd7;--g:#0e6b4d;--y:#f5c400;--win:#e3f3ea;--box:box-sizing;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1713;--ink:#eaf1ec;--mut:#9fb0a6;--card:#17221c;--line:#2a3a31;--g:#3fbf8f;--win:#17352a}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans Telugu","Noto Sans Devanagari",system-ui,sans-serif;line-height:1.55}
+.wrap{max-width:860px;margin:0 auto;padding:16px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:22px}
+.logo i{font-style:normal;background:var(--y);color:#12211b;padding:0 6px;border-radius:4px}
+.lang{display:flex;flex-wrap:wrap;border:2px solid var(--ink);border-radius:18px;overflow:hidden}
+.lang button{border:0;background:transparent;color:var(--ink);padding:6px 14px;font:inherit;font-weight:600;cursor:pointer}
+.lang button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--y);outline-offset:2px}
+h1{font-family:"Bricolage Grotesque","Noto Sans Telugu","Noto Sans Devanagari",sans-serif;font-size:clamp(28px,6vw,46px);line-height:1.15;margin:28px 0 8px;font-weight:800}
+.sub{color:var(--mut);margin:0 0 20px}
+.pick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.pick label{font-size:13px;color:var(--mut);display:block}
+select,input{width:100%;padding:10px;border:1.5px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit}
+.tw{overflow-x:auto;margin-top:18px;border:1.5px solid var(--line);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:520px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line)}
+th{font-family:"Bricolage Grotesque",sans-serif}
+td:first-child{color:var(--mut);width:28%}
+td.win{background:var(--win);font-weight:700}
+tr:last-child td{border-bottom:0}
+.sum{margin-top:16px;padding:14px 16px;border-left:6px solid var(--y);background:var(--card);border-radius:0 8px 8px 0}
+.lead{margin-top:28px;padding:18px;background:var(--g);color:#fff;border-radius:12px}
+.lead h2{margin:0 0 4px;font-size:22px}
+.lead p{margin:0 0 12px;opacity:.92}
+.lead form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lead .full{grid-column:1/-1}
+.lead button{grid-column:1/-1;background:var(--y);color:#12211b;border:0;padding:12px;border-radius:8px;font:inherit;font-weight:800;cursor:pointer}
+.ok{display:none;margin-top:10px;background:#fff;color:#12211b;padding:10px;border-radius:8px;font-weight:600}
+.ok a{color:#0e6b4d;font-weight:800}
+.note{font-size:12px;color:var(--mut);margin:18px 0}
+@media(max-width:560px){.pick{grid-template-columns:1fr}.lead form{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="logo">Car<i>Tulana</i></div>
+<div class="lang" role="group" aria-label="Language">
+<button data-l="en" aria-pressed="true">English</button><button data-l="te" aria-pressed="false">తెలుగు</button><button data-l="hi" aria-pressed="false">हिन्दी</button><button data-l="ta" aria-pressed="false">தமிழ்</button><button data-l="kn" aria-pressed="false">ಕನ್ನಡ</button><button data-l="ml" aria-pressed="false">മലയാളം</button><button data-l="bn" aria-pressed="false">বাংলা</button><button data-l="mr" aria-pressed="false">मराठी</button></div></header>
+<h1 id="t1"></h1><p class="sub" id="t2"></p>
+<div class="pick" id="pick"></div>
+<div class="tw"><table id="tbl"></table></div>
+<div class="sum" id="sum"></div>
+<section class="lead"><h2 id="lh"></h2><p id="lp"></p>
+<form id="f"><input class="full" id="fn" required><input id="fp" type="tel" inputmode="numeric" pattern="[0-9]{10}" required><input id="fc" required><select id="fst"></select><select class="full" id="fcar"></select><button id="fb" type="submit"></button></form>
+<div class="ok" id="ok" role="status"></div></section>
+<p class="note" id="note"></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+var sb=supabase.createClient("https://wkxgjfnwsbgdzbdmpvan.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndreGdqZm53c2JnZHpiZG1wdmFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxNzIxOTYsImV4cCI6MjEwODc0ODE5Nn0.0T5m4vakRE8xDsSewqi_3JTc7dtV7V31ADkED2L_mzE");
+var CARS=[
+{n:"Tata Nexon",p:8.0,m:17,e:1199,s:5,b:382,f:0,t:0},
+{n:"Tata Punch",p:6.2,m:20,e:1199,s:5,b:366,f:0,t:0},
+{n:"Maruti Swift",p:6.5,m:24.8,e:1197,s:5,b:265,f:0,t:1},
+{n:"Hyundai Creta",p:11.1,m:17.4,e:1497,s:5,b:433,f:0,t:0},
+{n:"Maruti Baleno",p:6.7,m:22.4,e:1197,s:5,b:318,f:0,t:1},
+{n:"Maruti Brezza",p:8.3,m:19.8,e:1462,s:5,b:328,f:0,t:0}];
+var L={
+en:{t1:"Compare cars in your own language",t2:"Pick up to 3 cars and see them side by side.",car:"Car",rows:["Price (ex-showroom)","Mileage","Engine","Seats","Boot space","Fuel","Body type"],fuel:["Petrol"],body:["SUV / Crossover","Hatchback"],
+sel:"Car ",none:"None",lh:"Get the best price",lp:"Share your details and a dealer near you will call back.",fn:"Your name",fp:"Mobile number (10 digits)",fc:"City",fb:"Get best offer",
+ok:function(n){return "Thanks "+n+"! A dealer will call you soon. (Demo: not sent anywhere yet.)"},
+note:"Sample data for demo only. Prices and specs are approximate.",
+sm:function(a,b,c){return "Lowest price: "+a+". Best mileage: "+b+". Biggest boot: "+c+"."},sh:"Quick summary",u:{p:"₹ lakh",m:"kmpl",e:"cc",b:"L"},few:"Pick at least 2 cars to compare."},
+te:{t1:"మీ భాషలోనే కార్లను పోల్చండి",t2:"3 కార్ల వరకు ఎంచుకొని పక్కపక్కనే చూడండి.",car:"కారు",rows:["ధర (ఎక్స్-షోరూమ్)","మైలేజ్","ఇంజిన్","సీట్లు","బూట్ స్పేస్","ఇంధనం","బాడీ రకం"],fuel:["పెట్రోల్"],body:["SUV / క్రాస్‌ఓవర్","హ్యాచ్‌బ్యాక్"],
+sel:"కారు ",none:"ఏదీ వద్దు",lh:"బెస్ట్ ధర పొందండి",lp:"మీ వివరాలు ఇవ్వండి, మీ దగ్గరి డీలర్ మీకు కాల్ చేస్తారు.",fn:"మీ పేరు",fp:"మొబైల్ నంబర్ (10 అంకెలు)",fc:"నగరం",fb:"బెస్ట్ ఆఫర్ పొందండి",
+ok:function(n){return "ధన్యవాదాలు "+n+"! డీలర్ త్వరలో కాల్ చేస్తారు. (డెమో: ఇంకా ఎక్కడా పంపలేదు.)"},
+note:"ఇది డెమో కోసం శాంపిల్ డేటా మాత్రమే. ధరలు, స్పెక్స్ సుమారుగా ఉన్నాయి.",
+sm:function(a,b,c){return "తక్కువ ధర: "+a+". ఉత్తమ మైలేజ్: "+b+". పెద్ద బూట్: "+c+"."},sh:"సారాంశం",u:{p:"₹ లక్షలు",m:"కి.మీ/లీ",e:"cc",b:"లీ"},few:"పోల్చడానికి కనీసం 2 కార్లు ఎంచుకోండి."},
+hi:{t1:"अपनी भाषा में कारों की तुलना करें",t2:"3 कारें चुनें और आमने-सामने देखें।",car:"कार",rows:["कीमत (एक्स-शोरूम)","माइलेज","इंजन","सीटें","बूट स्पेस","ईंधन","बॉडी टाइप"],fuel:["पेट्रोल"],body:["SUV / क्रॉसओवर","हैचबैक"],
+sel:"कार ",none:"कोई नहीं",lh:"सबसे अच्छी कीमत पाएं",lp:"अपनी जानकारी दें, आपके पास का डीलर आपको कॉल करेगा।",fn:"आपका नाम",fp:"मोबाइल नंबर (10 अंक)",fc:"शहर",fb:"बेस्ट ऑफर पाएं",
+ok:function(n){return "धन्यवाद "+n+"! डीलर जल्द कॉल करेगा। (डेमो: अभी कहीं भेजा नहीं गया।)"},
+note:"यह सिर्फ डेमो के लिए सैंपल डेटा है। कीमतें और स्पेक्स अनुमानित हैं।",
+sm:function(a,b,c){return "सबसे कम कीमत: "+a+"। सबसे अच्छा माइलेज: "+b+"। सबसे बड़ा बूट: "+c+"।"},sh:"सारांश",u:{p:"₹ लाख",m:"किमी/ली",e:"cc",b:"ली"},few:"तुलना के लिए कम से कम 2 कारें चुनें।"}};
+L.en.okt="Thanks {n}! A dealer will call you soon.";L.en.wa="Send on WhatsApp";
+L.te.okt="ధన్యవాదాలు {n}! డీలర్ త్వరలో కాల్ చేస్తారు.";L.te.wa="వాట్సాప్‌లో పంపండి";
+L.hi.okt="धन्यवाद {n}! डीलर जल्द कॉल करेगा।";L.hi.wa="व्हाट्सऐप पर भेजें";
+L.ta={t1:"உங்கள் மொழியிலேயே கார்களை ஒப்பிடுங்கள்",t2:"3 கார்கள் வரை தேர்ந்தெடுத்து அருகருகே பாருங்கள்.",car:"கார்",rows:["விலை (எக்ஸ்-ஷோரூம்)","மைலேஜ்","இன்ஜின்","இருக்கைகள்","பூட் இடம்","எரிபொருள்","உடல் வகை"],fu:"பெட்ரோல்",b1:"SUV / கிராஸ்ஓவர்",b2:"ஹேட்ச்பேக்",sel:"கார் ",none:"எதுவும் வேண்டாம்",lh:"சிறந்த விலையைப் பெறுங்கள்",lp:"உங்கள் விவரங்களைத் தாருங்கள், அருகிலுள்ள டீலர் அழைப்பார்.",fn:"உங்கள் பெயர்",fp:"மொபைல் எண் (10 இலக்கங்கள்)",fc:"நகரம்",fb:"சிறந்த ஆஃபரைப் பெறுங்கள்",okt:"நன்றி {n}! டீலர் விரைவில் அழைப்பார்.",note:"டெமோவுக்கான மாதிரி தரவு மட்டும். விலை, விவரங்கள் தோராயமானவை.",smt:"குறைந்த விலை: {a}. சிறந்த மைலேஜ்: {b}. பெரிய பூட்: {c}.",sh:"சுருக்கம்",u:{p:"₹ லட்சம்",m:"கிமீ/லி",e:"cc",b:"லி"},few:"ஒப்பிட குறைந்தது 2 கார்களைத் தேர்ந்தெடுங்கள்.",wa:"வாட்ஸ்அப்பில் அனுப்புங்கள்"};
+L.kn={t1:"ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲೇ ಕಾರುಗಳನ್ನು ಹೋಲಿಸಿ",t2:"3 ಕಾರುಗಳವರೆಗೆ ಆರಿಸಿ ಅಕ್ಕಪಕ್ಕ ನೋಡಿ.",car:"ಕಾರು",rows:["ಬೆಲೆ (ಎಕ್ಸ್-ಶೋರೂಂ)","ಮೈಲೇಜ್","ಎಂಜಿನ್","ಸೀಟುಗಳು","ಬೂಟ್ ಸ್ಥಳ","ಇಂಧನ","ಬಾಡಿ ಪ್ರಕಾರ"],fu:"ಪೆಟ್ರೋಲ್",b1:"SUV / ಕ್ರಾಸ್‌ಓವರ್",b2:"ಹ್ಯಾಚ್‌ಬ್ಯಾಕ್",sel:"ಕಾರು ",none:"ಯಾವುದೂ ಬೇಡ",lh:"ಉತ್ತಮ ಬೆಲೆ ಪಡೆಯಿರಿ",lp:"ನಿಮ್ಮ ವಿವರ ನೀಡಿ, ಹತ್ತಿರದ ಡೀಲರ್ ಕರೆ ಮಾಡುತ್ತಾರೆ.",fn:"ನಿಮ್ಮ ಹೆಸರು",fp:"ಮೊಬೈಲ್ ಸಂಖ್ಯೆ (10 ಅಂಕೆ)",fc:"ನಗರ",fb:"ಉತ್ತಮ ಆಫರ್ ಪಡೆಯಿರಿ",okt:"ಧನ್ಯವಾದ {n}! ಡೀಲರ್ ಶೀಘ್ರದಲ್ಲೇ ಕರೆ ಮಾಡುತ್ತಾರೆ.",note:"ಇದು ಡೆಮೊಗಾಗಿ ಮಾದರಿ ಡೇಟಾ ಮಾತ್ರ. ಬೆಲೆ, ವಿವರಗಳು ಅಂದಾಜು.",smt:"ಕಡಿಮೆ ಬೆಲೆ: {a}. ಉತ್ತಮ ಮೈಲೇಜ್: {b}. ದೊಡ್ಡ ಬೂಟ್: {c}.",sh:"ಸಾರಾಂಶ",u:{p:"₹ ಲಕ್ಷ",m:"ಕಿಮೀ/ಲೀ",e:"cc",b:"ಲೀ"},few:"ಹೋಲಿಸಲು ಕನಿಷ್ಠ 2 ಕಾರುಗಳನ್ನು ಆರಿಸಿ.",wa:"ವಾಟ್ಸಾಪ್‌ನಲ್ಲಿ ಕಳುಹಿಸಿ"};
+L.ml={t1:"നിങ്ങളുടെ ഭാഷയിൽ കാറുകൾ താരതമ്യം ചെയ്യൂ",t2:"3 കാറുകൾ വരെ തിരഞ്ഞെടുത്ത് അടുത്തടുത്ത് കാണൂ.",car:"കാർ",rows:["വില (എക്സ്-ഷോറൂം)","മൈലേജ്","എഞ്ചിൻ","സീറ്റുകൾ","ബൂട്ട് സ്ഥലം","ഇന്ധനം","ബോഡി തരം"],fu:"പെട്രോൾ",b1:"SUV / ക്രോസ്ഓവർ",b2:"ഹാച്ച്ബാക്ക്",sel:"കാർ ",none:"ഒന്നും വേണ്ട",lh:"ഏറ്റവും നല്ല വില നേടൂ",lp:"നിങ്ങളുടെ വിവരങ്ങൾ നൽകൂ, അടുത്തുള്ള ഡീലർ വിളിക്കും.",fn:"നിങ്ങളുടെ പേര്",fp:"മൊബൈൽ നമ്പർ (10 അക്കം)",fc:"നഗരം",fb:"മികച്ച ഓഫർ നേടൂ",okt:"നന്ദി {n}! ഡീലർ ഉടൻ വിളിക്കും.",note:"ഡെമോയ്ക്കുള്ള സാമ്പിൾ ഡാറ്റ മാത്രം. വിലയും വിവരങ്ങളും ഏകദേശമാണ്.",smt:"കുറഞ്ഞ വില: {a}. മികച്ച മൈലേജ്: {b}. വലിയ ബൂട്ട്: {c}.",sh:"സംഗ്രഹം",u:{p:"₹ ലക്ഷം",m:"കിമീ/ലി",e:"cc",b:"ലി"},few:"താരതമ്യത്തിന് കുറഞ്ഞത് 2 കാറുകൾ തിരഞ്ഞെടുക്കൂ.",wa:"വാട്സ്ആപ്പിൽ അയയ്ക്കൂ"};
+L.bn={t1:"নিজের ভাষায় গাড়ি তুলনা করুন",t2:"৩টি পর্যন্ত গাড়ি বেছে পাশাপাশি দেখুন।",car:"গাড়ি",rows:["দাম (এক্স-শোরুম)","মাইলেজ","ইঞ্জিন","আসন","বুট স্পেস","জ্বালানি","বডি টাইপ"],fu:"পেট্রোল",b1:"SUV / ক্রসওভার",b2:"হ্যাচব্যাক",sel:"গাড়ি ",none:"কিছু নয়",lh:"সেরা দাম পান",lp:"আপনার তথ্য দিন, কাছের ডিলার ফোন করবেন।",fn:"আপনার নাম",fp:"মোবাইল নম্বর (১০ সংখ্যা)",fc:"শহর",fb:"সেরা অফার পান",okt:"ধন্যবাদ {n}! ডিলার শীঘ্রই ফোন করবেন।",note:"শুধু ডেমোর জন্য নমুনা তথ্য। দাম ও স্পেক আনুমানিক।",smt:"সবচেয়ে কম দাম: {a}। সেরা মাইলেজ: {b}। সবচেয়ে বড় বুট: {c}।",sh:"সারসংক্ষেপ",u:{p:"₹ লাখ",m:"কিমি/লি",e:"cc",b:"লি"},few:"তুলনার জন্য অন্তত ২টি গাড়ি বাছুন।",wa:"হোয়াটসঅ্যাপে পাঠান"};
+L.mr={t1:"तुमच्या भाषेत गाड्यांची तुलना करा",t2:"३ गाड्या निवडा आणि शेजारी शेजारी पाहा.",car:"गाडी",rows:["किंमत (एक्स-शोरूम)","मायलेज","इंजिन","सीट","बूट स्पेस","इंधन","बॉडी प्रकार"],fu:"पेट्रोल",b1:"SUV / क्रॉसओव्हर",b2:"हॅचबॅक",sel:"गाडी ",none:"काहीही नको",lh:"सर्वोत्तम किंमत मिळवा",lp:"तुमची माहिती द्या, जवळचा डीलर तुम्हाला कॉल करेल.",fn:"तुमचे नाव",fp:"मोबाईल नंबर (१० अंक)",fc:"शहर",fb:"बेस्ट ऑफर मिळवा",okt:"धन्यवाद {n}! डीलर लवकरच कॉल करेल.",note:"फक्त डेमोसाठी नमुना डेटा. किंमत आणि स्पेक अंदाजे आहेत.",smt:"सर्वात कमी किंमत: {a}. सर्वोत्तम मायलेज: {b}. सर्वात मोठी बूट: {c}.",sh:"सारांश",u:{p:"₹ लाख",m:"किमी/लि",e:"cc",b:"लि"},few:"तुलनेसाठी किमान २ गाड्या निवडा.",wa:"व्हॉट्सअ‍ॅपवर पाठवा"};
+Object.keys(L).forEach(function(k){var o=L[k];o.ok=function(n){return o.okt.replace("{n}",n)};if(o.fu){o.fuel=[o.fu];o.body=[o.b1,o.b2]}if(o.smt)o.sm=function(a,b,c){return o.smt.replace("{a}",a).replace("{b}",b).replace("{c}",c)}});
+var lang="en",sel=[0,1,3];
+var $=function(i){return document.getElementById(i)};
+function pick(){var h="";for(var i=0;i<3;i++){h+='<div><label for="s'+i+'">'+L[lang].sel+(i+1)+'</label><select id="s'+i+'" data-i="'+i+'">';
+if(i==2)h+='<option value="-1"'+(sel[i]<0?" selected":"")+">"+L[lang].none+"</option>";
+CARS.forEach(function(c,k){h+='<option value="'+k+'"'+(sel[i]==k?" selected":"")+">"+c.n+"</option>"});h+="</select></div>"}
+$("pick").innerHTML=h;
+document.querySelectorAll("#pick select").forEach(function(s){s.onchange=function(){sel[+s.dataset.i]=+s.value;render()}})}
+function best(v,low){var m=low?Math.min.apply(0,v):Math.max.apply(0,v);return v.map(function(x){return x==m&&v.length>1})}
+function render(){var T=L[lang],cs=sel.filter(function(i){return i>=0}).map(function(i){return CARS[i]});
+if(cs.length<2){$("tbl").innerHTML="<tr><td>"+T.few+"</td></tr>";$("sum").textContent="";return}
+var P=best(cs.map(function(c){return c.p}),1),M=best(cs.map(function(c){return c.m}),0),B=best(cs.map(function(c){return c.b}),0),E=best(cs.map(function(c){return c.e}),0);
+function row(i,f,w){return "<tr><td>"+T.rows[i]+"</td>"+cs.map(function(c,k){return '<td'+(w&&w[k]?' class="win"':"")+">"+f(c)+"</td>"}).join("")+"</tr>"}
+var h="<tr><th>"+T.car+"</th>"+cs.map(function(c){return "<th>"+c.n+"</th>"}).join("")+"</tr>";
+h+=row(0,function(c){return "₹"+c.p+" "+T.u.p.replace("₹ ","")},P)+row(1,function(c){return c.m+" "+T.u.m},M)+row(2,function(c){return c.e+" "+T.u.e},E)+row(3,function(c){return c.s})+row(4,function(c){return c.b+" "+T.u.b},B)+row(5,function(c){return T.fuel[c.f]})+row(6,function(c){return T.body[c.t]});
+$("tbl").innerHTML=h;
+function nm(f,low){var m=cs.reduce(function(a,c){return (low?f(c)<f(a):f(c)>f(a))?c:a});return m.n}
+$("sum").innerHTML="<b>"+T.sh+":</b> "+T.sm(nm(function(c){return c.p},1),nm(function(c){return c.m},0),nm(function(c){return c.b},0))}
+function text(){var T=L[lang];document.documentElement.lang=lang;$("t1").textContent=T.t1;$("t2").textContent=T.t2;$("lh").textContent=T.lh;$("lp").textContent=T.lp;
+$("fn").placeholder=T.fn;$("fp").placeholder=T.fp;$("fc").placeholder=T.fc;$("fb").textContent=T.fb;$("note").textContent=T.note;$("ok").style.display="none";
+$("fcar").innerHTML=CARS.map(function(c){return "<option>"+c.n+"</option>"}).join("");$("fst").innerHTML=ST.map(function(s){return "<option>"+s+"</option>"}).join("");pick();render()}
+document.querySelectorAll(".lang button").forEach(function(b){b.onclick=function(){lang=b.dataset.l;document.querySelectorAll(".lang button").forEach(function(x){x.setAttribute("aria-pressed",x==b)});text()}});
+var WA="916305200898";var ST=["Andhra Pradesh","Telangana","Karnataka","Tamil Nadu","Kerala","Maharashtra","Gujarat","West Bengal","Delhi","Uttar Pradesh","Rajasthan","Other"];
+$("f").onsubmit=function(e){e.preventDefault();var d={name:$("fn").value,phone:$("fp").value,city:$("fc").value,state:$("fst").value,brand:$("fcar").value.split(" ")[0],car:$("fcar").value,lang:lang,at:new Date().toISOString()};
+try{sb.from("leads").insert([d]).then(function(){},function(){})}catch(x){}
+var msg="New car lead\nName: "+d.name+"\nPhone: "+d.phone+"\nCity: "+d.city+"\nState: "+d.state+"\nCar: "+d.car+"\nLanguage: "+d.lang;
+var o=$("ok");o.textContent=L[lang].ok(d.name)+" ";var a=document.createElement("a");a.href="https://wa.me/"+WA+"?text="+encodeURIComponent(msg);a.target="_blank";a.rel="noopener";a.textContent=L[lang].wa;o.appendChild(a);o.style.display="block";$("f").reset()};
+text();
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CarTulana Leads Dashboard</title>
+<style>
+body{margin:0;font-family:system-ui,sans-serif;background:#f2f4ef;color:#12211b;padding:16px}
+.w{max-width:900px;margin:0 auto}
+h1{margin:0 0 12px}
+.card{background:#fff;border:1.5px solid #d9dfd7;border-radius:10px;padding:14px;margin-bottom:14px}
+input,button{font:inherit;padding:10px;border-radius:8px;border:1.5px solid #d9dfd7}
+button{background:#0e6b4d;color:#fff;border:0;cursor:pointer;font-weight:700}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.big{font-size:40px;font-weight:800}
+.r{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #eef0ec}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:640px;font-size:14px}
+th,td{padding:6px 8px;text-align:left;border-bottom:1px solid #d9dfd7}
+</style></head><body><div class="w">
+<h1>CarTulana Leads</h1>
+<div class="card" id="login">
+<p>Enter your email. A login link will be sent to it.</p>
+<input id="em" type="email" placeholder="your email" value="ayyappa.dasari@gmail.com"> <button id="go">Send login link</button>
+<p id="msg"></p></div>
+<div id="dash" hidden>
+<div class="card"><div>Total leads</div><div class="big" id="tot">0</div> <button id="out">Log out</button></div>
+<div class="g" id="grp"></div>
+<div class="card"><b>Latest leads</b><div class="tw"><table id="tb"></table></div></div>
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+var sb=supabase.createClient("https://wkxgjfnwsbgdzbdmpvan.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndreGdqZm53c2JnZHpiZG1wdmFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxNzIxOTYsImV4cCI6MjEwODc0ODE5Nn0.0T5m4vakRE8xDsSewqi_3JTc7dtV7V31ADkED2L_mzE");
+var $=function(i){return document.getElementById(i)};
+$("go").onclick=function(){$("msg").textContent="Sending...";sb.auth.signInWithOtp({email:$("em").value,options:{emailRedirectTo:location.href.split("#")[0]}}).then(function(r){$("msg").textContent=r.error?("Error: "+r.error.message):"Check your email and click the login link."})};
+$("out").onclick=function(){sb.auth.signOut().then(function(){location.reload()})};
+function group(title,rows,k){var m={};rows.forEach(function(x){var v=x[k]||"-";m[v]=(m[v]||0)+1});
+var d=document.createElement("div");d.className="card";var b=document.createElement("b");b.textContent=title;d.appendChild(b);
+Object.keys(m).sort(function(a,b){return m[b]-m[a]}).forEach(function(v){var r=document.createElement("div");r.className="r";var a=document.createElement("span");a.textContent=v;var c=document.createElement("span");c.textContent=m[v];r.appendChild(a);r.appendChild(c);d.appendChild(r)});$("grp").appendChild(d)}
+function show(rows){$("login").hidden=true;$("dash").hidden=false;$("tot").textContent=rows.length;$("grp").innerHTML="";
+group("By state",rows,"state");group("By brand",rows,"brand");group("By car",rows,"car");group("By language",rows,"lang");
+var t=$("tb");t.innerHTML="";var h=t.insertRow();["Time","Name","Phone","City","State","Car","Lang"].forEach(function(x){var c=document.createElement("th");c.textContent=x;h.appendChild(c)});
+rows.slice(0,50).forEach(function(x){var r=t.insertRow();[new Date(x.created_at).toLocaleString(),x.name,x.phone,x.city,x.state,x.car,x.lang].forEach(function(v){r.insertCell().textContent=v||""})})}
+function load(){sb.from("leads").select("*").order("created_at",{ascending:false}).limit(1000).then(function(r){if(r.error){$("msg").textContent="Error: "+r.error.message;return}show(r.data)})}
+sb.auth.getSession().then(function(r){if(r.data.session)load()});
+sb.auth.onAuthStateChange(function(e,s){if(s&&e==="SIGNED_IN")load()});
+</script></body></html>
