@@ -65,10 +65,25 @@ var sb=supabase.createClient("https://wkxgjfnwsbgdzbdmpvan.supabase.co","eyJhbGc
 var CARS=[
 {n:"Tata Nexon",p:8.0,m:17,e:1199,s:5,b:382,f:0,t:0},
 {n:"Tata Punch",p:6.2,m:20,e:1199,s:5,b:366,f:0,t:0},
+{n:"Tata Altroz",p:6.3,m:19.3,e:1199,s:5,b:345,f:0,t:1},
 {n:"Maruti Swift",p:6.5,m:24.8,e:1197,s:5,b:265,f:0,t:1},
-{n:"Hyundai Creta",p:11.1,m:17.4,e:1497,s:5,b:433,f:0,t:0},
 {n:"Maruti Baleno",p:6.7,m:22.4,e:1197,s:5,b:318,f:0,t:1},
-{n:"Maruti Brezza",p:8.3,m:19.8,e:1462,s:5,b:328,f:0,t:0}];
+{n:"Maruti Brezza",p:8.3,m:19.8,e:1462,s:5,b:328,f:0,t:0},
+{n:"Maruti Fronx",p:6.9,m:21.8,e:1197,s:5,b:308,f:0,t:0},
+{n:"Maruti Grand Vitara",p:10.8,m:21.1,e:1462,s:5,b:373,f:0,t:0},
+{n:"Maruti WagonR",p:5.0,m:25.2,e:998,s:5,b:341,f:0,t:1},
+{n:"Maruti Alto K10",p:3.7,m:24.4,e:998,s:5,b:214,f:0,t:1},
+{n:"Hyundai Creta",p:11.1,m:17.4,e:1497,s:5,b:433,f:0,t:0},
+{n:"Hyundai Venue",p:7.3,m:17.5,e:1197,s:5,b:350,f:0,t:0},
+{n:"Hyundai i20",p:6.9,m:20.3,e:1197,s:5,b:311,f:0,t:1},
+{n:"Hyundai Exter",p:5.7,m:19.4,e:1197,s:5,b:391,f:0,t:0},
+{n:"Kia Sonet",p:7.3,m:18.4,e:1197,s:5,b:385,f:0,t:0},
+{n:"Kia Seltos",p:10.8,m:17,e:1497,s:5,b:433,f:0,t:0},
+{n:"Mahindra XUV 3XO",p:7.3,m:18.9,e:1197,s:5,b:364,f:0,t:0},
+{n:"Toyota Hyryder",p:10.9,m:21.1,e:1462,s:5,b:373,f:0,t:0},
+{n:"Renault Kiger",p:5.8,m:19.8,e:999,s:5,b:405,f:0,t:0},
+{n:"Skoda Kylaq",p:7.5,m:19.7,e:999,s:5,b:446,f:0,t:0},
+{n:"Honda Elevate",p:11.9,m:15.3,e:1498,s:5,b:458,f:0,t:0}];
 var L={
 en:{t1:"Compare cars in your own language",t2:"Pick up to 3 cars and see them side by side.",car:"Car",rows:["Price (ex-showroom)","Mileage","Engine","Seats","Boot space","Fuel","Body type"],fuel:["Petrol"],body:["SUV / Crossover","Hatchback"],
 sel:"Car ",none:"None",lh:"Get the best price",lp:"Share your details and a dealer near you will call back.",fn:"Your name",fp:"Mobile number (10 digits)",fc:"City",fb:"Get best offer",
@@ -94,7 +109,7 @@ L.ml={t1:"നിങ്ങളുടെ ഭാഷയിൽ കാറുകൾ ത�
 L.bn={t1:"নিজের ভাষায় গাড়ি তুলনা করুন",t2:"৩টি পর্যন্ত গাড়ি বেছে পাশাপাশি দেখুন।",car:"গাড়ি",rows:["দাম (এক্স-শোরুম)","মাইলেজ","ইঞ্জিন","আসন","বুট স্পেস","জ্বালানি","বডি টাইপ"],fu:"পেট্রোল",b1:"SUV / ক্রসওভার",b2:"হ্যাচব্যাক",sel:"গাড়ি ",none:"কিছু নয়",lh:"সেরা দাম পান",lp:"আপনার তথ্য দিন, কাছের ডিলার ফোন করবেন।",fn:"আপনার নাম",fp:"মোবাইল নম্বর (১০ সংখ্যা)",fc:"শহর",fb:"সেরা অফার পান",okt:"ধন্যবাদ {n}! ডিলার শীঘ্রই ফোন করবেন।",note:"শুধু ডেমোর জন্য নমুনা তথ্য। দাম ও স্পেক আনুমানিক।",smt:"সবচেয়ে কম দাম: {a}। সেরা মাইলেজ: {b}। সবচেয়ে বড় বুট: {c}।",sh:"সারসংক্ষেপ",u:{p:"₹ লাখ",m:"কিমি/লি",e:"cc",b:"লি"},few:"তুলনার জন্য অন্তত ২টি গাড়ি বাছুন।",wa:"হোয়াটসঅ্যাপে পাঠান"};
 L.mr={t1:"तुमच्या भाषेत गाड्यांची तुलना करा",t2:"३ गाड्या निवडा आणि शेजारी शेजारी पाहा.",car:"गाडी",rows:["किंमत (एक्स-शोरूम)","मायलेज","इंजिन","सीट","बूट स्पेस","इंधन","बॉडी प्रकार"],fu:"पेट्रोल",b1:"SUV / क्रॉसओव्हर",b2:"हॅचबॅक",sel:"गाडी ",none:"काहीही नको",lh:"सर्वोत्तम किंमत मिळवा",lp:"तुमची माहिती द्या, जवळचा डीलर तुम्हाला कॉल करेल.",fn:"तुमचे नाव",fp:"मोबाईल नंबर (१० अंक)",fc:"शहर",fb:"बेस्ट ऑफर मिळवा",okt:"धन्यवाद {n}! डीलर लवकरच कॉल करेल.",note:"फक्त डेमोसाठी नमुना डेटा. किंमत आणि स्पेक अंदाजे आहेत.",smt:"सर्वात कमी किंमत: {a}. सर्वोत्तम मायलेज: {b}. सर्वात मोठी बूट: {c}.",sh:"सारांश",u:{p:"₹ लाख",m:"किमी/लि",e:"cc",b:"लि"},few:"तुलनेसाठी किमान २ गाड्या निवडा.",wa:"व्हॉट्सअ‍ॅपवर पाठवा"};
 Object.keys(L).forEach(function(k){var o=L[k];o.ok=function(n){return o.okt.replace("{n}",n)};if(o.fu){o.fuel=[o.fu];o.body=[o.b1,o.b2]}if(o.smt)o.sm=function(a,b,c){return o.smt.replace("{a}",a).replace("{b}",b).replace("{c}",c)}});
-var lang="en",sel=[0,1,3];
+var lang="en",sel=[0,1,10];
 var $=function(i){return document.getElementById(i)};
 function pick(){var h="";for(var i=0;i<3;i++){h+='<div><label for="s'+i+'">'+L[lang].sel+(i+1)+'</label><select id="s'+i+'" data-i="'+i+'">';
 if(i==2)h+='<option value="-1"'+(sel[i]<0?" selected":"")+">"+L[lang].none+"</option>";
