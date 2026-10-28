@@ -55,7 +55,7 @@ tr:last-child td{border-bottom:0}
 <div class="tw"><table id="tbl"></table></div>
 <div class="sum" id="sum"></div>
 <section class="lead"><h2 id="lh"></h2><p id="lp"></p>
-<form id="f"><input class="full" id="fn" required><input id="fp" type="tel" inputmode="numeric" pattern="[0-9]{10}" required><input id="fc" required><select id="fst"></select><select class="full" id="fcar"></select><button id="fb" type="submit"></button></form>
+<form id="f"><input class="full" id="fn" required><input id="fp" type="tel" inputmode="numeric" required><input id="fc" required><select id="fst"></select><select class="full" id="fcar"></select><button id="fb" type="submit"></button></form>
 <div class="ok" id="ok" role="status"></div></section>
 <p class="note" id="note"></p>
 </div>
@@ -116,7 +116,7 @@ $("fn").placeholder=T.fn;$("fp").placeholder=T.fp;$("fc").placeholder=T.fc;$("fb
 $("fcar").innerHTML=CARS.map(function(c){return "<option>"+c.n+"</option>"}).join("");$("fst").innerHTML=ST.map(function(s){return "<option>"+s+"</option>"}).join("");pick();render()}
 document.querySelectorAll(".lang button").forEach(function(b){b.onclick=function(){lang=b.dataset.l;document.querySelectorAll(".lang button").forEach(function(x){x.setAttribute("aria-pressed",x==b)});text()}});
 var WA="916305200898";var ST=["Andhra Pradesh","Telangana","Karnataka","Tamil Nadu","Kerala","Maharashtra","Gujarat","West Bengal","Delhi","Uttar Pradesh","Rajasthan","Other"];
-$("f").onsubmit=function(e){e.preventDefault();var d={name:$("fn").value,phone:$("fp").value,city:$("fc").value,state:$("fst").value,brand:$("fcar").value.split(" ")[0],car:$("fcar").value,lang:lang,at:new Date().toISOString()};
+$("f").onsubmit=function(e){e.preventDefault();var d={name:$("fn").value,phone:$("fp").value.replace(/\D/g,"").slice(-10),city:$("fc").value,state:$("fst").value,brand:$("fcar").value.split(" ")[0],car:$("fcar").value,lang:lang};
 try{sb.from("leads").insert([d]).then(function(){},function(){})}catch(x){}
 var msg="New car lead\nName: "+d.name+"\nPhone: "+d.phone+"\nCity: "+d.city+"\nState: "+d.state+"\nCar: "+d.car+"\nLanguage: "+d.lang;
 var o=$("ok");o.textContent=L[lang].ok(d.name)+" ";var a=document.createElement("a");a.href="https://wa.me/"+WA+"?text="+encodeURIComponent(msg);a.target="_blank";a.rel="noopener";a.textContent=L[lang].wa;o.appendChild(a);o.style.display="block";$("f").reset()};

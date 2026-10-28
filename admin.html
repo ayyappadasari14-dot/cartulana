@@ -16,8 +16,8 @@ th,td{padding:6px 8px;text-align:left;border-bottom:1px solid #d9dfd7}
 </style></head><body><div class="w">
 <h1>CarTulana Leads</h1>
 <div class="card" id="login">
-<p>Enter your email. A login link will be sent to it.</p>
-<input id="em" type="email" placeholder="your email" value="ayyappa.dasari@gmail.com"> <button id="go">Send login link</button>
+<p>Login with your email and password.</p>
+<input id="em" type="email" placeholder="your email" value="ayyappa.dasari@gmail.com"> <input id="pw" type="password" placeholder="password"> <button id="go">Login</button>
 <p id="msg"></p></div>
 <div id="dash" hidden>
 <div class="card"><div>Total leads</div><div class="big" id="tot">0</div> <button id="out">Log out</button></div>
@@ -28,7 +28,7 @@ th,td{padding:6px 8px;text-align:left;border-bottom:1px solid #d9dfd7}
 <script>
 var sb=supabase.createClient("https://wkxgjfnwsbgdzbdmpvan.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndreGdqZm53c2JnZHpiZG1wdmFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxNzIxOTYsImV4cCI6MjEwODc0ODE5Nn0.0T5m4vakRE8xDsSewqi_3JTc7dtV7V31ADkED2L_mzE");
 var $=function(i){return document.getElementById(i)};
-$("go").onclick=function(){$("msg").textContent="Sending...";sb.auth.signInWithOtp({email:$("em").value,options:{emailRedirectTo:location.href.split("#")[0]}}).then(function(r){$("msg").textContent=r.error?("Error: "+r.error.message):"Check your email and click the login link."})};
+$("go").onclick=function(){$("msg").textContent="Logging in...";sb.auth.signInWithPassword({email:$("em").value,password:$("pw").value}).then(function(r){if(r.error){$("msg").textContent="Error: "+r.error.message}else{load()}})};
 $("out").onclick=function(){sb.auth.signOut().then(function(){location.reload()})};
 function group(title,rows,k){var m={};rows.forEach(function(x){var v=x[k]||"-";m[v]=(m[v]||0)+1});
 var d=document.createElement("div");d.className="card";var b=document.createElement("b");b.textContent=title;d.appendChild(b);
