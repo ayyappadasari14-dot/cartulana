@@ -42,7 +42,20 @@ tr:last-child td{border-bottom:0}
 .ok{display:none;margin-top:10px;background:#fff;color:#12211b;padding:10px;border-radius:8px;font-weight:600}
 .ok a{color:#0e6b4d;font-weight:800}
 .note{font-size:12px;color:var(--mut);margin:18px 0}
-@media(max-width:560px){.pick{grid-template-columns:1fr}.lead form{grid-template-columns:1fr}}
+.ch{margin:14px 0 6px}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chips button{border:1.5px solid var(--ink);background:transparent;color:var(--ink);border-radius:999px;padding:6px 14px;font:inherit;font-weight:600;cursor:pointer}
+.chips button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.emi,.how{margin-top:16px;padding:14px 16px;background:var(--card);border:1.5px solid var(--line);border-radius:10px}
+.er{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin:8px 0}
+#eo{font-size:26px;font-weight:800;color:var(--g)}
+.hg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+.hg i{display:inline-block;width:26px;height:26px;border-radius:50%;background:var(--y);color:#12211b;text-align:center;font-style:normal;font-weight:800;margin-right:8px}
+.tops{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+.tc{text-align:left;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 12px;font:inherit;cursor:pointer;border-top:4px solid var(--y)}
+.tc small{display:block;color:var(--mut)}.tc b{display:block;font-size:17px}
+.shb{margin-top:10px;background:#25d366;color:#fff;border:0;border-radius:8px;padding:10px 16px;font:inherit;font-weight:800;cursor:pointer}
+.wab{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#25d366;color:#fff;font-weight:800;padding:12px 18px;border-radius:999px;text-decoration:none;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+@media(max-width:560px){.er,.hg,.tops{grid-template-columns:1fr}.pick{grid-template-columns:1fr}.lead form{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -51,39 +64,29 @@ tr:last-child td{border-bottom:0}
 <div class="lang" role="group" aria-label="Language">
 <button data-l="en" aria-pressed="true">English</button><button data-l="te" aria-pressed="false">తెలుగు</button><button data-l="hi" aria-pressed="false">हिन्दी</button><button data-l="ta" aria-pressed="false">தமிழ்</button><button data-l="kn" aria-pressed="false">ಕನ್ನಡ</button><button data-l="ml" aria-pressed="false">മലയാളം</button><button data-l="bn" aria-pressed="false">বাংলা</button><button data-l="mr" aria-pressed="false">मराठी</button></div></header>
 <h1 id="t1"></h1><p class="sub" id="t2"></p>
+<div class="ch"><b id="bt"></b><div class="chips" id="bud"></div><div class="chips" id="bty"></div><div class="chips" id="bfu"></div></div>
+<div class="ch"><b id="tp"></b><div class="tops" id="tops"></div></div>
 <div class="pick" id="pick"></div>
+<div class="ch"><b id="pc"></b><div class="chips" id="pop"></div></div>
 <div class="tw"><table id="tbl"></table></div>
 <div class="sum" id="sum"></div>
+<button class="shb" id="shb" type="button"></button>
+<section class="emi"><b id="et"></b><div class="er"><select id="ec"></select><select id="ed"></select><select id="ey"></select></div><div id="eo"></div></section>
+<section class="how"><b id="hw"></b><div class="hg"><div><i>1</i><span id="h1"></span></div><div><i>2</i><span id="h2"></span></div><div><i>3</i><span id="h3"></span></div></div></section>
 <section class="lead"><h2 id="lh"></h2><p id="lp"></p>
 <form id="f"><input class="full" id="fn" required><input id="fp" type="tel" inputmode="numeric" required><input id="fc" required><select id="fst"></select><select class="full" id="fcar"></select><button id="fb" type="submit"></button></form>
 <div class="ok" id="ok" role="status"></div></section>
 <p class="note" id="note"></p>
+<p class="note">© CarTulana · +91 6305200898</p>
+<a class="wab" href="https://wa.me/916305200898?text=Hi%20CarTulana" target="_blank" rel="noopener">WhatsApp</a>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 var sb=supabase.createClient("https://wkxgjfnwsbgdzbdmpvan.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndreGdqZm53c2JnZHpiZG1wdmFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxNzIxOTYsImV4cCI6MjEwODc0ODE5Nn0.0T5m4vakRE8xDsSewqi_3JTc7dtV7V31ADkED2L_mzE");
-var CARS=[
-{n:"Tata Nexon",p:7.4,m:17,e:1199,s:5,b:382,f:0,t:0},
-{n:"Tata Punch",p:5.65,m:20,e:1199,s:5,b:366,f:0,t:0},
-{n:"Tata Altroz",p:6.0,m:19.3,e:1199,s:5,b:345,f:0,t:1},
-{n:"Maruti Swift",p:5.79,m:24.8,e:1197,s:5,b:265,f:0,t:1},
-{n:"Maruti Baleno",p:5.99,m:22.4,e:1197,s:5,b:318,f:0,t:1},
-{n:"Maruti Brezza",p:8.26,m:19.8,e:1462,s:5,b:328,f:0,t:0},
-{n:"Maruti Fronx",p:6.85,m:21.8,e:1197,s:5,b:308,f:0,t:0},
-{n:"Maruti Grand Vitara",p:10.76,m:21.1,e:1462,s:5,b:373,f:0,t:0},
-{n:"Maruti WagonR",p:4.99,m:25.2,e:998,s:5,b:341,f:0,t:1},
-{n:"Maruti Alto K10",p:3.7,m:24.4,e:998,s:5,b:214,f:0,t:1},
-{n:"Hyundai Creta",p:11.11,m:17.4,e:1497,s:5,b:433,f:0,t:0},
-{n:"Hyundai Venue",p:7.89,m:17.5,e:1197,s:5,b:350,f:0,t:0},
-{n:"Hyundai i20",p:5.98,m:20.3,e:1197,s:5,b:311,f:0,t:1},
-{n:"Hyundai Exter",p:5.68,m:19.4,e:1197,s:5,b:391,f:0,t:0},
-{n:"Kia Sonet",p:7.3,m:18.4,e:1197,s:5,b:385,f:0,t:0},
-{n:"Kia Seltos",p:10.8,m:17,e:1497,s:5,b:433,f:0,t:0},
-{n:"Mahindra XUV 3XO",p:7.3,m:18.9,e:1197,s:5,b:364,f:0,t:0},
-{n:"Toyota Hyryder",p:10.9,m:21.1,e:1462,s:5,b:373,f:0,t:0},
-{n:"Renault Kiger",p:5.8,m:19.8,e:999,s:5,b:405,f:0,t:0},
-{n:"Skoda Kylaq",p:7.5,m:19.7,e:999,s:5,b:446,f:0,t:0},
-{n:"Honda Elevate",p:11.9,m:15.3,e:1498,s:5,b:458,f:0,t:0}];
+var RAW=[[1,"Honda","Amaze",0,2,7.2,18.65,1199,5,416,0],[2,"Honda","City",0,2,11.9,17.8,1498,5,506,0],[3,"Honda","Elevate",0,0,11.9,15.3,1498,5,458,0],[4,"Hyundai","Creta",0,0,11.11,17.4,1497,5,433,1],[5,"Hyundai","Creta",1,0,12.9,21.8,1493,5,433,0],[6,"Hyundai","Creta Electric",4,0,17.99,473,51.4,5,433,1],[7,"Hyundai","Exter",0,0,5.68,19.4,1197,5,391,1],[8,"Hyundai","Exter",2,0,7.2,27.1,1197,5,200,0],[9,"Hyundai","Grand i10 Nios",0,1,5.4,20.7,1197,5,260,0],[10,"Hyundai","Venue",0,0,7.89,18,1197,5,350,1],[11,"Hyundai","Venue",1,0,10.0,24.2,1493,5,350,0],[12,"Hyundai","Verna",0,2,10.7,18.6,1497,5,528,0],[13,"Hyundai","i20",0,1,5.98,20.35,1197,5,311,1],[14,"Kia","Seltos",0,0,10.8,17,1497,5,433,0],[15,"Kia","Seltos",1,0,13.0,20.7,1493,5,433,0],[16,"Kia","Sonet",0,0,7.3,18.4,1197,5,385,0],[17,"Kia","Sonet",1,0,9.9,22.3,1493,5,385,0],[18,"MG","Windsor EV",4,0,14.0,332,38,5,604,0],[19,"Mahindra","Scorpio-N",1,0,13.2,15.4,2184,7,460,0],[20,"Mahindra","XUV 3XO",0,0,7.3,18.9,1197,5,364,0],[21,"Mahindra","XUV 3XO",1,0,8.9,20.6,1498,5,364,0],[22,"Maruti","Alto K10",0,1,3.7,24.4,998,4,214,1],[23,"Maruti","Alto K10",2,1,4.8,33.4,998,4,214,0],[24,"Maruti","Baleno",0,1,5.99,22.35,1197,5,318,1],[25,"Maruti","Baleno",2,1,7.9,30.61,1197,5,318,0],[26,"Maruti","Brezza",0,0,8.26,17.38,1462,5,328,1],[27,"Maruti","Brezza",2,0,9.6,25.51,1462,5,328,0],[28,"Maruti","Celerio",0,1,4.7,25.2,998,5,313,1],[29,"Maruti","Dzire",0,2,6.26,24.79,1197,5,382,1],[30,"Maruti","Dzire",2,2,7.9,33.73,1197,5,382,0],[31,"Maruti","Ertiga",0,3,8.8,20.51,1462,7,209,1],[32,"Maruti","Ertiga",2,3,9.9,26.11,1462,7,209,0],[33,"Maruti","Fronx",0,0,6.85,21.79,1197,5,308,1],[34,"Maruti","Fronx",2,0,8.0,28.51,1197,5,214,0],[35,"Maruti","Grand Vitara",0,0,10.76,21.11,1462,5,373,1],[36,"Maruti","Grand Vitara",3,0,15.9,27.97,1490,5,373,0],[37,"Maruti","S-Presso",0,1,3.5,24.8,998,4,270,1],[38,"Maruti","Swift",0,1,5.79,24.8,1197,5,265,1],[39,"Maruti","Swift",2,1,7.5,32.85,1197,5,265,0],[40,"Maruti","Victoris",0,0,10.5,21.18,1462,5,373,1],[41,"Maruti","WagonR",0,1,4.99,25.2,998,5,341,1],[42,"Maruti","WagonR",2,1,5.9,34.05,998,5,220,0],[43,"Maruti","XL6",0,3,11.52,20.97,1462,6,209,1],[44,"Maruti","e Vitara",4,0,10.99,543,61,5,310,1],[45,"Nissan","Magnite",0,0,5.6,19.35,999,5,336,0],[46,"Renault","Kiger",0,0,5.8,19.8,999,5,405,0],[47,"Renault","Kwid",0,1,4.3,21.7,999,5,279,0],[48,"Renault","Triber",0,3,5.8,20,999,7,84,0],[49,"Skoda","Kylaq",0,0,7.5,19.7,999,5,446,0],[50,"Skoda","Slavia",0,2,9.9,19.5,999,5,521,0],[51,"Tata","Altroz",0,1,6.0,19.33,1199,5,345,1],[52,"Tata","Altroz",1,1,8.3,23.64,1497,5,345,0],[53,"Tata","Altroz",2,1,7.6,26.2,1199,5,210,0],[54,"Tata","Harrier",1,0,14.0,16.8,1956,5,445,0],[55,"Tata","Nexon",0,0,7.4,17.44,1199,5,382,1],[56,"Tata","Nexon",1,0,9.5,23.22,1497,5,382,0],[57,"Tata","Nexon",2,0,8.9,24,1199,5,321,0],[58,"Tata","Nexon EV",4,0,12.5,390,30,5,350,0],[59,"Tata","Punch",0,0,5.65,20.09,1199,5,366,1],[60,"Tata","Punch",2,0,6.7,26.99,1199,5,210,0],[61,"Tata","Punch EV",4,0,9.7,315,25,5,366,0],[62,"Tata","Safari",1,0,14.7,16.3,1956,7,73,0],[63,"Tata","Tiago",0,1,4.6,20,1199,5,242,0],[64,"Tata","Tiago",2,1,5.9,26.49,1199,5,242,0],[65,"Tata","Tiago EV",4,1,7.5,250,19.2,5,240,0],[66,"Tata","Tigor",0,2,5.7,19.28,1199,5,419,0],[67,"Toyota","Glanza",0,1,6.2,22.35,1197,5,318,0],[68,"Toyota","Hyryder",0,0,10.9,21.1,1462,5,373,0],[69,"Toyota","Hyryder",3,0,15.9,27.97,1490,5,373,0],[70,"Toyota","Innova Hycross",3,3,19.9,23.24,1987,7,300,0],[71,"Toyota","Urban Cruiser Taisor",0,0,7.0,21.7,1197,5,308,0],[72,"Volkswagen","Taigun",0,0,10.7,18.2,999,5,385,0],[73,"Volkswagen","Virtus",0,2,10.5,18.1,999,5,521,0]];
+var FN=["Petrol","Diesel","CNG","Hybrid","EV"],BN=["SUV","Hatchback","Sedan","MPV"];
+function mk(r){return {id:r[0],br:r[1],n:r[1]+" "+r[2],f:r[3],t:r[4],p:r[5],m:r[6],e:r[7],s:r[8],b:r[9],v:r[10]}}
+var CARS=RAW.map(mk);
 var L={
 en:{t1:"Compare cars in your own language",t2:"Pick up to 3 cars and see them side by side.",car:"Car",rows:["Price (ex-showroom)","Mileage","Engine","Seats","Boot space","Fuel","Body type"],fuel:["Petrol"],body:["SUV / Crossover","Hatchback"],
 sel:"Car ",none:"None",lh:"Get the best price",lp:"Share your details and a dealer near you will call back.",fn:"Your name",fp:"Mobile number (10 digits)",fc:"City",fb:"Get best offer",
@@ -109,33 +112,90 @@ L.ml={t1:"നിങ്ങളുടെ ഭാഷയിൽ കാറുകൾ ത�
 L.bn={t1:"নিজের ভাষায় গাড়ি তুলনা করুন",t2:"৩টি পর্যন্ত গাড়ি বেছে পাশাপাশি দেখুন।",car:"গাড়ি",rows:["দাম (এক্স-শোরুম)","মাইলেজ","ইঞ্জিন","আসন","বুট স্পেস","জ্বালানি","বডি টাইপ"],fu:"পেট্রোল",b1:"SUV / ক্রসওভার",b2:"হ্যাচব্যাক",sel:"গাড়ি ",none:"কিছু নয়",lh:"সেরা দাম পান",lp:"আপনার তথ্য দিন, কাছের ডিলার ফোন করবেন।",fn:"আপনার নাম",fp:"মোবাইল নম্বর (১০ সংখ্যা)",fc:"শহর",fb:"সেরা অফার পান",okt:"ধন্যবাদ {n}! ডিলার শীঘ্রই ফোন করবেন।",note:"শুধু ডেমোর জন্য নমুনা তথ্য। দাম ও স্পেক আনুমানিক।",smt:"সবচেয়ে কম দাম: {a}। সেরা মাইলেজ: {b}। সবচেয়ে বড় বুট: {c}।",sh:"সারসংক্ষেপ",u:{p:"₹ লাখ",m:"কিমি/লি",e:"cc",b:"লি"},few:"তুলনার জন্য অন্তত ২টি গাড়ি বাছুন।",wa:"হোয়াটসঅ্যাপে পাঠান"};
 L.mr={t1:"तुमच्या भाषेत गाड्यांची तुलना करा",t2:"३ गाड्या निवडा आणि शेजारी शेजारी पाहा.",car:"गाडी",rows:["किंमत (एक्स-शोरूम)","मायलेज","इंजिन","सीट","बूट स्पेस","इंधन","बॉडी प्रकार"],fu:"पेट्रोल",b1:"SUV / क्रॉसओव्हर",b2:"हॅचबॅक",sel:"गाडी ",none:"काहीही नको",lh:"सर्वोत्तम किंमत मिळवा",lp:"तुमची माहिती द्या, जवळचा डीलर तुम्हाला कॉल करेल.",fn:"तुमचे नाव",fp:"मोबाईल नंबर (१० अंक)",fc:"शहर",fb:"बेस्ट ऑफर मिळवा",okt:"धन्यवाद {n}! डीलर लवकरच कॉल करेल.",note:"फक्त डेमोसाठी नमुना डेटा. किंमत आणि स्पेक अंदाजे आहेत.",smt:"सर्वात कमी किंमत: {a}. सर्वोत्तम मायलेज: {b}. सर्वात मोठी बूट: {c}.",sh:"सारांश",u:{p:"₹ लाख",m:"किमी/लि",e:"cc",b:"लि"},few:"तुलनेसाठी किमान २ गाड्या निवडा.",wa:"व्हॉट्सअ‍ॅपवर पाठवा"};
 Object.keys(L).forEach(function(k){var o=L[k];o.ok=function(n){return o.okt.replace("{n}",n)};if(o.fu){o.fuel=[o.fu];o.body=[o.b1,o.b2]}if(o.smt)o.sm=function(a,b,c){return o.smt.replace("{a}",a).replace("{b}",b).replace("{c}",c)}});
-var lang="en",sel=[0,1,10];
+Object.assign(L.en,{bt:"Find cars by budget",all:"All",pc:"Popular comparisons",et:"EMI calculator",dp:"Down payment",yr:"years",em:"Monthly EMI",hw:"How it works",h1:"Pick cars",h2:"Compare side by side",h3:"Get the best offer"});
+Object.assign(L.te,{bt:"బడ్జెట్‌తో కార్లు వెతకండి",all:"అన్నీ",pc:"పాపులర్ పోలికలు",et:"EMI కాలిక్యులేటర్",dp:"డౌన్ పేమెంట్",yr:"సంవత్సరాలు",em:"నెలవారీ EMI",hw:"ఎలా పనిచేస్తుంది",h1:"కార్లు ఎంచుకోండి",h2:"పక్కపక్కనే పోల్చండి",h3:"బెస్ట్ ఆఫర్ పొందండి"});
+Object.assign(L.hi,{bt:"बजट से कार खोजें",all:"सभी",pc:"लोकप्रिय तुलनाएं",et:"EMI कैलकुलेटर",dp:"डाउन पेमेंट",yr:"साल",em:"मासिक EMI",hw:"यह कैसे काम करता है",h1:"कारें चुनें",h2:"आमने-सामने तुलना करें",h3:"बेस्ट ऑफर पाएं"});
+Object.assign(L.ta,{bt:"பட்ஜெட் மூலம் கார்களைத் தேடுங்கள்",all:"அனைத்தும்",pc:"பிரபல ஒப்பீடுகள்",et:"EMI கால்குலேட்டர்",dp:"முன்பணம்",yr:"ஆண்டுகள்",em:"மாத EMI",hw:"எப்படி வேலை செய்கிறது",h1:"கார்களைத் தேர்ந்தெடுங்கள்",h2:"அருகருகே ஒப்பிடுங்கள்",h3:"சிறந்த ஆஃபரைப் பெறுங்கள்"});
+Object.assign(L.kn,{bt:"ಬಜೆಟ್‌ನಿಂದ ಕಾರುಗಳನ್ನು ಹುಡುಕಿ",all:"ಎಲ್ಲಾ",pc:"ಜನಪ್ರಿಯ ಹೋಲಿಕೆಗಳು",et:"EMI ಕ್ಯಾಲ್ಕುಲೇಟರ್",dp:"ಡೌನ್ ಪೇಮೆಂಟ್",yr:"ವರ್ಷಗಳು",em:"ಮಾಸಿಕ EMI",hw:"ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ",h1:"ಕಾರುಗಳನ್ನು ಆರಿಸಿ",h2:"ಅಕ್ಕಪಕ್ಕ ಹೋಲಿಸಿ",h3:"ಉತ್ತಮ ಆಫರ್ ಪಡೆಯಿರಿ"});
+Object.assign(L.ml,{bt:"ബജറ്റ് അനുസരിച്ച് കാറുകൾ കണ്ടെത്തൂ",all:"എല്ലാം",pc:"ജനപ്രിയ താരതമ്യങ്ങൾ",et:"EMI കാൽക്കുലേറ്റർ",dp:"ഡൗൺ പേയ്മെന്റ്",yr:"വർഷം",em:"പ്രതിമാസ EMI",hw:"എങ്ങനെ പ്രവർത്തിക്കുന്നു",h1:"കാറുകൾ തിരഞ്ഞെടുക്കൂ",h2:"അടുത്തടുത്ത് താരതമ്യം ചെയ്യൂ",h3:"മികച്ച ഓഫർ നേടൂ"});
+Object.assign(L.bn,{bt:"বাজেট অনুযায়ী গাড়ি খুঁজুন",all:"সব",pc:"জনপ্রিয় তুলনা",et:"EMI ক্যালকুলেটর",dp:"ডাউন পেমেন্ট",yr:"বছর",em:"মাসিক EMI",hw:"কীভাবে কাজ করে",h1:"গাড়ি বাছুন",h2:"পাশাপাশি তুলনা করুন",h3:"সেরা অফার পান"});
+Object.assign(L.mr,{bt:"बजेटनुसार गाड्या शोधा",all:"सर्व",pc:"लोकप्रिय तुलना",et:"EMI कॅल्क्युलेटर",dp:"डाउन पेमेंट",yr:"वर्षे",em:"मासिक EMI",hw:"हे कसे काम करते",h1:"गाड्या निवडा",h2:"शेजारी शेजारी तुलना करा",h3:"बेस्ट ऑफर मिळवा"});
+Object.assign(L.en,{tp:"Top picks",bm:"Best mileage",bb:"Biggest boot",bp:"Lowest price",sw:"Share on WhatsApp"});
+Object.assign(L.te,{tp:"టాప్ పిక్స్",bm:"బెస్ట్ మైలేజ్",bb:"పెద్ద బూట్",bp:"తక్కువ ధర",sw:"వాట్సాప్‌లో షేర్ చేయండి"});
+Object.assign(L.hi,{tp:"टॉप पिक्स",bm:"सबसे अच्छा माइलेज",bb:"सबसे बड़ा बूट",bp:"सबसे कम कीमत",sw:"व्हाट्सऐप पर शेयर करें"});
+Object.assign(L.ta,{tp:"சிறந்த தேர்வுகள்",bm:"சிறந்த மைலேஜ்",bb:"பெரிய பூட்",bp:"குறைந்த விலை",sw:"வாட்ஸ்அப்பில் பகிருங்கள்"});
+Object.assign(L.kn,{tp:"ಟಾಪ್ ಆಯ್ಕೆಗಳು",bm:"ಉತ್ತಮ ಮೈಲೇಜ್",bb:"ದೊಡ್ಡ ಬೂಟ್",bp:"ಕಡಿಮೆ ಬೆಲೆ",sw:"ವಾಟ್ಸಾಪ್‌ನಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಿ"});
+Object.assign(L.ml,{tp:"മികച്ച തിരഞ്ഞെടുപ്പുകൾ",bm:"മികച്ച മൈലേജ്",bb:"വലിയ ബൂട്ട്",bp:"കുറഞ്ഞ വില",sw:"വാട്സ്ആപ്പിൽ പങ്കിടൂ"});
+Object.assign(L.bn,{tp:"সেরা বাছাই",bm:"সেরা মাইলেজ",bb:"বড় বুট",bp:"সবচেয়ে কম দাম",sw:"হোয়াটসঅ্যাপে শেয়ার করুন"});
+Object.assign(L.mr,{tp:"टॉप निवडी",bm:"सर्वोत्तम मायलेज",bb:"सर्वात मोठी बूट",bp:"सर्वात कमी किंमत",sw:"व्हॉट्सअ‍ॅपवर शेअर करा"});
+Object.assign(L.en,{body:["SUV","Hatchback","Sedan","MPV"],fuels:["Petrol","Diesel","CNG","Hybrid","Electric"],note:"Approx. ex-showroom starting prices. Confirm the final price with your dealer. \u2713 = price checked Oct 2026."});
+Object.assign(L.te,{body:["SUV","హ్యాచ్‌బ్యాక్","సెడాన్","MPV"],fuels:["పెట్రోల్","డీజిల్","CNG","హైబ్రిడ్","ఎలక్ట్రిక్"],note:"ధరలు సుమారుగా (ఎక్స్-షోరూమ్). తుది ధర డీలర్‌తో నిర్ధారించుకోండి. \u2713 = ధర ధృవీకరించబడింది."});
+Object.assign(L.hi,{body:["SUV","हैचबैक","सेडान","MPV"],fuels:["पेट्रोल","डीजल","CNG","हाइब्रिड","इलेक्ट्रिक"],note:"कीमतें अनुमानित (एक्स-शोरूम)। अंतिम कीमत डीलर से पक्की करें। \u2713 = कीमत जांची गई।"});
+Object.assign(L.ta,{body:["SUV","ஹேட்ச்பேக்","செடான்","MPV"],fuels:["பெட்ரோல்","டீசல்","CNG","ஹைபிரிட்","மின்சார"],note:"விலைகள் தோராயமானவை (எக்ஸ்-ஷோரூம்). இறுதி விலையை டீலரிடம் உறுதிசெய்யுங்கள். \u2713 = சரிபார்க்கப்பட்ட விலை."});
+Object.assign(L.kn,{body:["SUV","ಹ್ಯಾಚ್‌ಬ್ಯಾಕ್","ಸೆಡಾನ್","MPV"],fuels:["ಪೆಟ್ರೋಲ್","ಡೀಸೆಲ್","CNG","ಹೈಬ್ರಿಡ್","ಎಲೆಕ್ಟ್ರಿಕ್"],note:"ಬೆಲೆಗಳು ಅಂದಾಜು (ಎಕ್ಸ್-ಶೋರೂಂ). ಅಂತಿಮ ಬೆಲೆಯನ್ನು ಡೀಲರ್‌ನಿಂದ ಖಚಿತಪಡಿಸಿ. \u2713 = ಪರಿಶೀಲಿಸಿದ ಬೆಲೆ."});
+Object.assign(L.ml,{body:["SUV","ഹാച്ച്ബാക്ക്","സെഡാൻ","MPV"],fuels:["പെട്രോൾ","ഡീസൽ","CNG","ഹൈബ്രിഡ്","ഇലക്ട്രിക്"],note:"വിലകൾ ഏകദേശം (എക്സ്-ഷോറൂം). അന്തിമ വില ഡീലറോട് ഉറപ്പാക്കൂ. \u2713 = പരിശോധിച്ച വില."});
+Object.assign(L.bn,{body:["SUV","হ্যাচব্যাক","সেডান","MPV"],fuels:["পেট্রোল","ডিজেল","CNG","হাইব্রিড","ইলেকট্রিক"],note:"দাম আনুমানিক (এক্স-শোরুম)। চূড়ান্ত দাম ডিলারের কাছে নিশ্চিত করুন। \u2713 = যাচাই করা দাম।"});
+Object.assign(L.mr,{body:["SUV","हॅचबॅक","सेडान","MPV"],fuels:["पेट्रोल","डिझेल","CNG","हायब्रिड","इलेक्ट्रिक"],note:"किंमती अंदाजे (एक्स-शोरूम). अंतिम किंमत डीलरकडून निश्चित करा. \u2713 = तपासलेली किंमत."});
+var lang="en",sel=[0,1,2];
 var $=function(i){return document.getElementById(i)};
-function pick(){var h="";for(var i=0;i<3;i++){h+='<div><label for="s'+i+'">'+L[lang].sel+(i+1)+'</label><select id="s'+i+'" data-i="'+i+'">';
-if(i==2)h+='<option value="-1"'+(sel[i]<0?" selected":"")+">"+L[lang].none+"</option>";
-CARS.forEach(function(c,k){h+='<option value="'+k+'"'+(sel[i]==k?" selected":"")+">"+c.n+"</option>"});h+="</select></div>"}
+function ix(n){for(var i=0;i<CARS.length;i++)if(CARS[i].n==n&&CARS[i].f==0)return i;return 0}
+function dn(c,t){return c.n+" \u00b7 "+(t?L[lang].fuels[c.f]:FN[c.f])}
+function mg(c){return c.f==2?1:c.f==4?2:0}
+function bc(c){return BCL[c.br]||"#12211b"}
+function dflt(){sel=[ix("Tata Nexon"),ix("Tata Punch"),ix("Hyundai Creta")]}
+function opts(v){var h="",b="";CARS.forEach(function(c,k){if(c.br!=b){if(b)h+="</optgroup>";h+='<optgroup label="'+c.br+'">';b=c.br}h+='<option value="'+k+'"'+(v==k?" selected":"")+">"+dn(c,1)+"</option>"});return h+"</optgroup>"}
+function pick(){var h="";for(var i=0;i<3;i++){h+='<div><label for="s'+i+'">'+L[lang].sel+(i+1)+'</label><select id="s'+i+'" data-i="'+i+'">'+(i==2?'<option value="-1"'+(sel[i]<0?" selected":"")+">"+L[lang].none+"</option>":"")+opts(sel[i])+"</select></div>"}
 $("pick").innerHTML=h;
 document.querySelectorAll("#pick select").forEach(function(s){s.onchange=function(){sel[+s.dataset.i]=+s.value;render()}})}
 function best(v,low){var m=low?Math.min.apply(0,v):Math.max.apply(0,v);return v.map(function(x){return x==m&&v.length>1})}
 function render(){var T=L[lang],cs=sel.filter(function(i){return i>=0}).map(function(i){return CARS[i]});
 if(cs.length<2){$("tbl").innerHTML="<tr><td>"+T.few+"</td></tr>";$("sum").textContent="";return}
-var P=best(cs.map(function(c){return c.p}),1),M=best(cs.map(function(c){return c.m}),0),B=best(cs.map(function(c){return c.b}),0),E=best(cs.map(function(c){return c.e}),0);
+var no=cs.map(function(){return false}),gm=cs.every(function(c){return mg(c)==mg(cs[0])}),ge=cs.every(function(c){return (c.f==4)==(cs[0].f==4)});
+var P=best(cs.map(function(c){return c.p}),1),M=gm?best(cs.map(function(c){return c.m}),0):no,B=best(cs.map(function(c){return c.b}),0),E=ge?best(cs.map(function(c){return c.e}),0):no;
 function row(i,f,w){return "<tr><td>"+T.rows[i]+"</td>"+cs.map(function(c,k){return '<td'+(w&&w[k]?' class="win"':"")+">"+f(c)+"</td>"}).join("")+"</tr>"}
-var h="<tr><th>"+T.car+"</th>"+cs.map(function(c){return "<th>"+c.n+"</th>"}).join("")+"</tr>";
-h+=row(0,function(c){return "₹"+c.p+" "+T.u.p.replace("₹ ","")},P)+row(1,function(c){return c.m+" "+T.u.m},M)+row(2,function(c){return c.e+" "+T.u.e},E)+row(3,function(c){return c.s})+row(4,function(c){return c.b+" "+T.u.b},B)+row(5,function(c){return T.fuel[c.f]})+row(6,function(c){return T.body[c.t]});
+var h="<tr><th>"+T.car+"</th>"+cs.map(function(c){return '<th style="border-top:4px solid '+bc(c)+'">'+dn(c,1)+"</th>"}).join("")+"</tr>";
+h+=row(0,function(c){return "\u20b9"+c.p+" "+T.u.p.replace("\u20b9 ","")+(c.v?" \u2713":"")},P)+row(1,function(c){return c.m+" "+(c.f==2?"km/kg":c.f==4?"km":T.u.m)},M)+row(2,function(c){return c.e+" "+(c.f==4?"kWh":T.u.e)},E)+row(3,function(c){return c.s})+row(4,function(c){return c.b+" "+T.u.b},B)+row(5,function(c){return T.fuels[c.f]})+row(6,function(c){return T.body[c.t]});
 $("tbl").innerHTML=h;
 function nm(f,low){var m=cs.reduce(function(a,c){return (low?f(c)<f(a):f(c)>f(a))?c:a});return m.n}
-$("sum").innerHTML="<b>"+T.sh+":</b> "+T.sm(nm(function(c){return c.p},1),nm(function(c){return c.m},0),nm(function(c){return c.b},0))}
+$("sum").innerHTML="<b>"+T.sh+":</b> "+T.sm(nm(function(c){return c.p},1),gm?nm(function(c){return c.m},0):"\u2013",nm(function(c){return c.b},0))}
 function text(){var T=L[lang];document.documentElement.lang=lang;$("t1").textContent=T.t1;$("t2").textContent=T.t2;$("lh").textContent=T.lh;$("lp").textContent=T.lp;
 $("fn").placeholder=T.fn;$("fp").placeholder=T.fp;$("fc").placeholder=T.fc;$("fb").textContent=T.fb;$("note").textContent=T.note;$("ok").style.display="none";
-$("fcar").innerHTML=CARS.map(function(c){return "<option>"+c.n+"</option>"}).join("");$("fst").innerHTML=ST.map(function(s){return "<option>"+s+"</option>"}).join("");pick();render()}
+$("fcar").innerHTML=CARS.map(function(c){return '<option value="'+dn(c,0)+'">'+dn(c,1)+"</option>"}).join("");$("fst").innerHTML=ST.map(function(s){return "<option>"+s+"</option>"}).join("");pick();render();text2()}
 document.querySelectorAll(".lang button").forEach(function(b){b.onclick=function(){lang=b.dataset.l;document.querySelectorAll(".lang button").forEach(function(x){x.setAttribute("aria-pressed",x==b)});text()}});
 var WA="916305200898";var ST=["Andhra Pradesh","Telangana","Karnataka","Tamil Nadu","Kerala","Maharashtra","Gujarat","West Bengal","Delhi","Uttar Pradesh","Rajasthan","Other"];
-$("f").onsubmit=function(e){e.preventDefault();var d={name:$("fn").value,phone:$("fp").value.replace(/\D/g,"").slice(-10),city:$("fc").value,state:$("fst").value,brand:$("fcar").value.split(" ")[0],car:$("fcar").value,lang:lang};
+$("f").onsubmit=function(e){e.preventDefault();var v=$("fcar").value,cc=CARS.filter(function(c){return dn(c,0)==v})[0];var d={name:$("fn").value,phone:$("fp").value.replace(/\D/g,"").slice(-10),city:$("fc").value,state:$("fst").value,brand:cc?cc.br:v.split(" ")[0],car:v,lang:lang};
 try{sb.from("leads").insert([d]).then(function(){},function(){})}catch(x){}
 var msg="New car lead\nName: "+d.name+"\nPhone: "+d.phone+"\nCity: "+d.city+"\nState: "+d.state+"\nCar: "+d.car+"\nLanguage: "+d.lang;
 var o=$("ok");o.textContent=L[lang].ok(d.name)+" ";var a=document.createElement("a");a.href="https://wa.me/"+WA+"?text="+encodeURIComponent(msg);a.target="_blank";a.rel="noopener";a.textContent=L[lang].wa;o.appendChild(a);o.style.display="block";$("f").reset()};
-text();
+var bud=-1,bty=-1,bfu=-1,BR=[[0,5,"\u2264 5"],[5,8,"5 \u2013 8"],[8,12,"8 \u2013 12"],[12,99,"12 +"]];
+var POP=[["Tata Nexon","Tata Punch"],["Maruti Swift","Maruti Baleno"],["Hyundai Creta","Kia Seltos"],["Hyundai Venue","Kia Sonet"],["Maruti Brezza","Tata Nexon"]];
+function chip(box,label,on,fn){var x=document.createElement("button");x.textContent=label;x.setAttribute("aria-pressed",on);x.onclick=fn;$(box).appendChild(x)}
+function chipsUI(){var T=L[lang];$("bud").innerHTML="";$("bty").innerHTML="";$("bfu").innerHTML="";
+BR.forEach(function(b,i){chip("bud",b[2],bud==i,function(){bud=bud==i?-1:i;fil()})});
+[T.all].concat(T.body).forEach(function(n,i){chip("bty",n,bty==i-1,function(){bty=i-1;fil()})});
+[T.all].concat(T.fuels).forEach(function(n,i){chip("bfu",n,bfu==i-1,function(){bfu=i-1;fil()})})}
+function fil(){var m=[],r=BR[bud]||[0,99];CARS.forEach(function(c,i){if(c.p>=r[0]&&c.p<r[1]&&(bty<0||c.t==bty)&&(bfu<0||c.f==bfu))m.push(i)});
+if(m.length){sel=[m[0],m.length>1?m[1]:-1,m.length>2?m[2]:-1]}chipsUI();pick();render()}
+function emiUI(){var c=$("ec"),d=$("ed"),y=$("ey"),T=L[lang],v=[c.value,d.value,y.value];
+c.innerHTML=opts(sel[0]);
+d.innerHTML=[10,20,30].map(function(x){return '<option value="'+x+'"'+(x==20?" selected":"")+">"+T.dp+" "+x+"%</option>"}).join("");
+y.innerHTML=[3,5,7].map(function(x){return '<option value="'+x+'"'+(x==5?" selected":"")+">"+x+" "+T.yr+"</option>"}).join("");
+if(v[0]){c.value=v[0];d.value=v[1];y.value=v[2]}emi()}
+function emi(){var T=L[lang],car=CARS[+$("ec").value],P=car.p*100000*(1-$("ed").value/100),r=0.09/12,n=$("ey").value*12,e=P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);$("eo").textContent=T.em+" (9%): \u20b9"+Math.round(e).toLocaleString("en-IN")}
+["ec","ed","ey"].forEach(function(i){$(i).onchange=emi});
+function text2(){var T=L[lang];$("bt").textContent=T.bt+" ("+T.u.p+")";$("pc").textContent=T.pc;$("tp").textContent=T.tp;$("shb").textContent=T.sw;topsUI();$("et").textContent=T.et;$("hw").textContent=T.hw;$("h1").textContent=T.h1;$("h2").textContent=T.h2;$("h3").textContent=T.h3;
+chipsUI();$("pop").innerHTML="";POP.forEach(function(p){chip("pop",p.map(function(n){return n.split(" ").slice(1).join(" ")}).join(" vs "),false,function(){sel=[ix(p[0]),ix(p[1]),-1];pick();render()})});emiUI()}
+var BCL={Tata:"#2563eb",Maruti:"#dc2626",Hyundai:"#0f766e",Kia:"#7c3aed",Mahindra:"#b45309",Toyota:"#be185d",Renault:"#ca8a04",Skoda:"#15803d",Honda:"#475569",Nissan:"#9f1239",MG:"#0369a1",Volkswagen:"#1d4ed8"};
+function topsUI(){var T=L[lang],M=[["bp","p",1,function(c){return "\u20b9"+c.p+" "+T.u.p.replace("\u20b9 ","")},function(){return true}],["bm","m",0,function(c){return c.m+" "+T.u.m},function(c){return mg(c)==0}],["bb","b",0,function(c){return c.b+" "+T.u.b},function(){return true}]];
+$("tops").innerHTML="";M.forEach(function(m){var o=CARS.map(function(c,i){return i}).filter(function(i){return m[4](CARS[i])}).sort(function(a,b){return m[2]?CARS[a][m[1]]-CARS[b][m[1]]:CARS[b][m[1]]-CARS[a][m[1]]});var c=CARS[o[0]];
+var x=document.createElement("button");x.className="tc";x.type="button";x.style.borderTopColor=bc(c);x.innerHTML="<small></small><b></b><span></span>";
+x.children[0].textContent=T[m[0]];x.children[1].textContent=dn(c,1);x.children[2].textContent=m[3](c);x.onclick=function(){sel=[o[0],o[1],o[2]];pick();render();window.scrollTo({top:$("pick").offsetTop-20,behavior:"smooth"})};$("tops").appendChild(x)})}
+$("shb").onclick=function(){var ids=sel.filter(function(i){return i>=0}),u=location.origin+location.pathname+"?c="+ids.map(function(i){return CARS[i].id}).join(",")+"&l="+lang,t=ids.map(function(i){return dn(CARS[i],0)}).join(" vs ")+"\n"+u;window.open("https://wa.me/?text="+encodeURIComponent(t),"_blank")};
+function qs(){try{var qp=new URLSearchParams(location.search),qc=(qp.get("c")||"").split(",").map(function(id){for(var i=0;i<CARS.length;i++)if(CARS[i].id==+id)return i;return -1}).filter(function(i){return i>=0});
+if(qc.length>1)sel=[qc[0],qc[1],qc.length>2?qc[2]:-1];var ql=qp.get("l");if(ql&&L[ql]){lang=ql;document.querySelectorAll(".lang button").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.l==ql)})}}catch(e){}}
+function mk2(r){return {id:r.id,br:r.brand,n:r.brand+" "+r.model,f:Math.max(0,FN.indexOf(r.fuel)),t:Math.max(0,BN.indexOf(r.body)),p:+r.price,m:+r.mileage,e:+r.engine,s:+r.seats,b:+r.boot,v:!!r.verified}}
+function loadDB(){try{sb.from("cars").select("*").eq("active",true).order("brand").order("model").order("id").then(function(r){if(r.error||!r.data||r.data.length<5)return;CARS=r.data.map(mk2);dflt();qs();text()},function(){})}catch(e){}}
+dflt();qs();text();loadDB();
 </script>
 </body>
 </html>
